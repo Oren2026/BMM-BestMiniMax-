@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+
+# 框架動態產物（不要進版控）
+framework-dashboard.html
+prompt.*.md
+*.bak
+
+# 編輯器
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+
+# 系統
+Thumbs.db
+
+# 暫存
+*.tmp
+*.log
+.tmp/

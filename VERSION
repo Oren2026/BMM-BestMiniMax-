@@ -1,0 +1,11 @@
+v1.0.0
+# Agent Framework — Version Manifest
+# 任何 AI 讀取本框架的第一個檔案應是 VERSION。
+# 接著依序讀取：CHANGELOG → MIGRATION → .framework/PROTOCOL → INDEX。
+
+schema-version: 1
+last-updated: 2026-06-01
+framework-status: stable
+breaking-changes-since-v0: none
+min-compatible-agent-version: 1.0.0
+recommended-restart-on-bump: true
