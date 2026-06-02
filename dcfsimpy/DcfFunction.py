@@ -1,13 +1,24 @@
+"""DcfFunction.py — DCF 模擬核心。
+
+v1.1.0 改動：
+- 引入 backoff_strategies 套件，Station 用策略物件取代 hardcode BEB
+- Config 新增 backoff_strategy 欄位與策略參數
+- 行為完全向後相容：預設 backoff_strategy="beb"，BEB 跑出來的結果跟 v1.0.0 一致
+"""
+
 import logging
 import os
 import random
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 import simpy
+
+from backoff_strategies import create as create_strategy
+from backoff_strategies import get as get_strategy
 
 from .Times import *
 
@@ -30,6 +41,10 @@ class Config:
     cw_max: int = 1023  # max cw window size
     r_limit: int = 7
     mcs: int = 7
+    # 策略相關（v1.1.0 新增）
+    backoff_strategy: str = "beb"  # "beb" / "lild" / "eied"
+    # 策略參數（會被傳給策略的 __init__）
+    strategy_params: Dict = field(default_factory=dict)
 
 
 big_num = 10000000  # some big number for transmitting query preemption
@@ -62,6 +77,10 @@ class Station:
         )
         self.cw_min = config.cw_min  # cw min parameter value
         self.cw_max = config.cw_max  # cw max parameter value
+        # 策略物件（v1.1.0 新增）
+        self.strategy = create_strategy(config.backoff_strategy, **config.strategy_params)
+        # 當前 CW（v1.1.0 新增）—— 策略會 update 它
+        self.current_cw = self.strategy.initial_cw(cw_min=self.cw_min, cw_max=self.cw_max)
         self.channel = channel  # channel object
         env.process(self.start())  # simulation process
         self.process = None  # waiting back off process
@@ -76,9 +95,7 @@ class Station:
                 was_sent = yield self.env.process(self.send_frame())
 
     def wait_back_off(self):
-        back_off_time = self.generate_new_back_off_time(
-            self.failed_transmissions_in_row
-        )  # generate the new Back Off time
+        back_off_time = self.generate_new_back_off_time()  # 使用策略決定 CW
         while back_off_time > -1:
             try:
                 with self.channel.tx_lock.request() as req:  # wait for the lock/idle channel
@@ -173,17 +190,20 @@ class Station:
             self.sent_completed()
             return True
 
-    def generate_new_back_off_time(self, failed_transmissions_in_row):
-        upper_limit = (
-            pow(2, failed_transmissions_in_row) * (self.cw_min + 1) - 1
-        )  # define the upper limit basing on  unsuccessful transmissions in the row
-        upper_limit = (
-            upper_limit if upper_limit <= self.cw_max else self.cw_max
-        )  # set upper limit to CW Max if is bigger then this parameter
-        back_off = random.randint(0, upper_limit)  # draw the back off value
+    def generate_new_back_off_time(self):
+        """v1.1.0 重寫：用策略計算上界，再隨機抽。"""
+        # 策略更新 current_cw（失敗時）
+        self.current_cw = self.strategy.update_on_failure(
+            self.current_cw,
+            cw_min=self.cw_min,
+            cw_max=self.cw_max,
+            failed_in_row=self.failed_transmissions_in_row,
+        )
+        upper_limit = self.current_cw
+        back_off = random.randint(0, upper_limit)
         self.channel.backoffs[back_off][
             self.channel.n_of_stations
-        ] += 1  # store drawn value for future analyzes
+        ] += 1
         return back_off * self.times.t_slot
 
     def generate_new_frame(self):
@@ -204,6 +224,7 @@ class Station:
             self.failed_transmissions_in_row = 0
 
     def sent_completed(self):
+        """v1.1.0 重寫：成功時也呼叫策略（更新 current_cw）。"""
         log(
             self,
             f"Successfully sent frame, waiting ack: {self.times.get_ack_frame_time()}",
@@ -215,6 +236,12 @@ class Station:
         self.channel.succeeded_transmissions += 1
         self.succeeded_transmissions += 1
         self.failed_transmissions_in_row = 0
+        # 策略更新 current_cw（成功時）
+        self.current_cw = self.strategy.update_on_success(
+            self.current_cw,
+            cw_min=self.cw_min,
+            cw_max=self.cw_max,
+        )
         self.channel.bytes_sent += self.frame_to_send.data_size
         return True
 
@@ -307,6 +334,8 @@ def add_to_results(p_coll, channel, n, results, seed, simulation_time, config: C
     )
     results.setdefault("PAYLOAD", []).append(config.data_size)
     results.setdefault("MCS", []).append(config.mcs)
+    # 策略欄位（v1.1.0 新增）
+    results.setdefault("BACKOFF_STRATEGY", []).append(config.backoff_strategy)
 
 
 def save_results(
