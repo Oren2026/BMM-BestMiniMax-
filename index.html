@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mavis Agent 架構儀表板</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans TC', system-ui, sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #1a1f35, #2d1f4a); padding: 24px 40px; border-bottom: 1px solid #2a2a3a; }
+    .header h1 { font-size: 24px; color: #fff; margin-bottom: 4px; }
+    .header p { font-size: 14px; color: #888; }
+    .refresh-btn { position: absolute; top: 24px; right: 40px; background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .refresh-btn:hover { background: #1d4ed8; }
+
+    .section { padding: 32px 40px; }
+    .section-title { font-size: 16px; color: #888; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Org Chart */
+    .org-container { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+    .org-level { display: flex; justify-content: center; gap: 40px; position: relative; }
+
+    .agent-card {
+      background: #1a1f35;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 20px 28px;
+      min-width: 180px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .agent-card:hover { border-color: #2563eb; transform: translateY(-4px); box-shadow: 0 8px 30px rgba(37, 99, 235, 0.2); }
+
+    .agent-card.root { border-color: #f97316; background: linear-gradient(135deg, #1a1f35, #2d1f4a); }
+    .agent-card.worker { border-color: #3b82f6; }
+    .agent-card .role { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+    .agent-card .name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .agent-card .desc { font-size: 12px; color: #666; line-height: 1.4; }
+    .agent-card .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-top: 10px; }
+    .status-dot.active { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .status-dot.inactive { background: #888; }
+
+    /* Connector lines */
+    .connector { width: 2px; background: linear-gradient(to bottom, #3b82f6, #8b5cf6); margin: 0 auto; }
+    .horizontal-line { height: 2px; background: linear-gradient(to right, #3b82f6, #8b5cf6); }
+
+    /* Sessions Table */
+    .sessions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .session-card {
+      background: #1a1f35;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+    .session-card:hover { border-color: #3b82f6; }
+    .session-card .session-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .session-card .session-meta { font-size: 12px; color: #666; display: flex; flex-direction: column; gap: 4px; }
+    .session-card .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+    .badge.active { background: #22c55e20; color: #22c55e; }
+    .badge.archived { background: #888820; color: #888; }
+    .badge.root { background: #f9731620; color: #f97316; }
+    .badge.branch { background: #2563eb20; color: #2563eb; }
+    .badge.general { background: #8b5cf620; color: #8b5cf6; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+    .stat-card { background: #1a1f35; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px 28px; min-width: 160px; }
+    .stat-card .stat-value { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-card .stat-label { font-size: 12px; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #3b82f6, #8b5cf6); }
+    .timeline-item { position: relative; padding: 12px 0; }
+    .timeline-item::before { content: ''; position: absolute; left: -20px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: #3b82f6; border: 2px solid #0f1117; }
+    .timeline-item .time { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .timeline-item .event { font-size: 13px; color: #ccc; }
+
+    /* Detail Panel */
+    .detail-panel {
+      position: fixed; top: 0; right: -420px; width: 400px; height: 100vh;
+      background: #1a1f35; border-left: 1px solid #2a2a4a;
+      transition: right 0.3s ease; z-index: 100;
+      overflow-y: auto; padding: 24px;
+    }
+    .detail-panel.open { right: 0; }
+    .detail-panel h3 { color: #fff; font-size: 18px; margin-bottom: 20px; }
+    .detail-panel .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #888; font-size: 24px; cursor: pointer; }
+    .detail-row { margin-bottom: 16px; }
+    .detail-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .detail-value { font-size: 14px; color: #fff; }
+
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+    .overlay.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Mavis Agent 架構儀表板</h1>
+    <p>即時監控 Agent 部署狀態、工作負載與協作關係</p>
+    <button class="refresh-btn" onclick="loadData()">🔄 刷新</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📊 概覽</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Agent 總數</div></div>
+      <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">活躍 Session</div></div>
+      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Worker Agents</div></div>
+      <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">總 Session 數</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔗 Agent 組織架構</div>
+    <div class="org-container">
+      <!-- Root -->
+      <div class="org-level">
+        <div class="agent-card root" onclick="showDetail('mavis')">
+          <div class="role">Root / Leader</div>
+          <div class="name">Mavis</div>
+          <div class="desc">團隊領導者，負責協調、决策與品質管控</div>
+          <span class="status-dot active"></span>
+        </div>
+      </div>
+
+      <div class="connector" style="height: 40px;"></div>
+      <div class="horizontal-line" style="width: 600px; margin: 0 auto;"></div>
+
+      <!-- Workers -->
+      <div class="org-level">
+        <div class="agent-card worker" onclick="showDetail('general')">
+          <div class="role">Worker</div>
+          <div class="name">General</div>
+          <div class="desc">通用工作者，灵活适配各类任务</div>
+          <span class="status-dot inactive"></span>
+        </div>
+        <div class="agent-card worker" onclick="showDetail('coder')">
+          <div class="role">Worker</div>
+          <div class="name">Coder</div>
+          <div class="desc">Hands-on software engineer，写代码、ship代码</div>
+          <span class="status-dot inactive"></span>
+        </div>
+        <div class="agent-card worker" onclick="showDetail('verifier')">
+          <div class="role">Worker</div>
+          <div class="name">Verifier</div>
+          <div class="desc">Adversarial verification，测试并尝试打破 deliverables</div>
+          <span class="status-dot inactive"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">💬 即時 Sessions</div>
+    <div class="sessions-grid">
+      <div class="session-card">
+        <div class="session-title">Mavis <span class="badge root">Root</span></div>
+        <div class="session-meta">
+          <span>ID: 404585416609955</span>
+          <span>Model: MiniMax-M2.7</span>
+          <span>Status: <span class="badge active">Active</span></span>
+          <span>建立: 2026-06-02 02:43:32</span>
+        </div>
+      </div>
+      <div class="session-card">
+        <div class="session-title">General <span class="badge branch">Branch</span></div>
+        <div class="session-meta">
+          <span>ID: 404585416609956</span>
+          <span>Model: MiniMax-M2.7</span>
+          <span>Status: <span class="badge archived">Inactive</span></span>
+          <span>Parent: Mavis</span>
+        </div>
+      </div>
+      <div class="session-card">
+        <div class="session-title">Coder <span class="badge branch">Branch</span></div>
+        <div class="session-meta">
+          <span>ID: 404585416609957</span>
+          <span>Model: MiniMax-M2.7</span>
+          <span>Status: <span class="badge archived">Inactive</span></span>
+          <span>Parent: Mavis</span>
+        </div>
+      </div>
+      <div class="session-card">
+        <div class="session-title">Verifier <span class="badge branch">Branch</span></div>
+        <div class="session-meta">
+          <span>ID: 404585416609958</span>
+          <span>Model: MiniMax-M2.7</span>
+          <span>Status: <span class="badge archived">Inactive</span></span>
+          <span>Parent: Mavis</span>
+        </div>
+      </div>
+      <div class="session-card">
+        <div class="session-title">建立Agent框架結構 <span class="badge archived">Archived</span></div>
+        <div class="session-meta">
+          <span>ID: 404584934703223</span>
+          <span>Model: MiniMax-M3</span>
+          <span>Status: <span class="badge archived">Archived</span></span>
+          <span>建立: 2026-06-02 02:44:05</span>
+        </div>
+      </div>
+      <div class="session-card">
+        <div class="session-title">Mavis  <span class="badge archived">Archived</span></div>
+        <div class="session-meta">
+          <span>ID: 404585416609954</span>
+          <span>Model: MiniMax-M2.7</span>
+          <span>Status: <span class="badge archived">Archived</span></span>
+          <span>建立: 2026-06-02 02:43:27</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📋 協作流程</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="time">2026-06-02 02:43:27</div>
+        <div class="event">Mavis 系統初始化，創建 Agent 團隊架構</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time">2026-06-02 02:43:32</div>
+        <div class="event">Mavis Root Session 啟動，作為主要對話窗口</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time">2026-06-02 02:43:32</div>
+        <div class="event">General、Coder、Verifier 三個 Worker Agent 生成</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time">2026-06-02 02:44:05</div>
+        <div class="event">建立 Agent 框架結構 Session (已歸檔)</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time">2026-06-02 03:10:00</div>
+        <div class="event">建立 Portfolio 作品展示網站 (Next.js + Auth)</div>
+      </div>
+      <div class="timeline-item">
+        <div class="time">2026-06-02 11:13:00</div>
+        <div class="event">建立 Agent 架構儀表板系統</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="overlay" id="overlay" onclick="closeDetail()"></div>
+  <div class="detail-panel" id="detailPanel">
+    <button class="close-btn" onclick="closeDetail()">✕</button>
+    <h3 id="detailTitle">Agent 詳情</h3>
+    <div id="detailContent"></div>
+  </div>
+
+  <script>
+    const agents = {
+      mavis: {
+        name: 'Mavis',
+        role: 'Root / Leader',
+        status: 'active',
+        sessionId: '404585416609955',
+        model: 'MiniMax-M2.7',
+        description: '團隊領導者，負責協調、决策與品質管控。作為主要對話窗口，同時肩負複雜任務的團隊組織與最終交付品質把關。',
+        responsibilities: ['任務分解與路由', '團隊協調與决策', '最終品質把關', '與用戶直接溝通'],
+        completedTasks: ['Portfolio 網站建置', 'Agent 架構初始化', 'SSH Key 部署設定', '本儀表板開發']
+      },
+      general: {
+        name: 'General',
+        role: 'Worker - 通用工作者',
+        status: 'inactive',
+        sessionId: '404585416609956',
+        model: 'MiniMax-M2.7',
+        description: '通用工作者，灵活适配各类任务，不擅长的主动转交专家。',
+        responsibilities: ['多樣化任務執行', '資料研究與分析', '非專業領域處理', '簡單文案與文件生成'],
+        completedTasks: ['團隊計劃執行', '並行任務處理']
+      },
+      coder: {
+        name: 'Coder',
+        role: 'Worker - 軟體工程師',
+        status: 'inactive',
+        sessionId: '404585416609957',
+        model: 'MiniMax-M2.7',
+        description: 'Hands-on software engineer — reads code, writes code, ships code。',
+        responsibilities: ['程式碼開發', '功能實現', '架構設計', '代碼質量優化'],
+        completedTasks: ['軟體開發任務']
+      },
+      verifier: {
+        name: 'Verifier',
+        role: 'Worker - 驗證專家',
+        status: 'inactive',
+        sessionId: '404585416609958',
+        model: 'MiniMax-M2.7',
+        description: 'Adversarial verification specialist — tries to break deliverables before they ship。',
+        responsibilities: ['品質驗證', '問題發現', '極限測試', '安全審查'],
+        completedTasks: ['測試驗證任務']
+      }
+    };
+
+    function showDetail(agentId) {
+      const agent = agents[agentId];
+      document.getElementById('detailTitle').textContent = agent.name;
+      document.getElementById('detailContent').innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">角色</div>
+          <div class="detail-value">${agent.role}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">狀態</div>
+          <div class="detail-value"><span class="badge ${agent.status === 'active' ? 'active' : 'archived'}">${agent.status === 'active' ? '活躍' : '待命'}</span></div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Session ID</div>
+          <div class="detail-value" style="font-family: monospace; font-size: 12px;">${agent.sessionId}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">使用模型</div>
+          <div class="detail-value">${agent.model}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">職責描述</div>
+          <div class="detail-value">${agent.description}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">主要職責</div>
+          <div class="detail-value">
+            <ul style="padding-left: 20px; margin-top: 8px;">
+              ${agent.responsibilities.map(r => `<li style="margin-bottom: 4px;">${r}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">已完成任務</div>
+          <div class="detail-value">
+            <ul style="padding-left: 20px; margin-top: 8px;">
+              ${agent.completedTasks.map(t => `<li style="margin-bottom: 4px;">✅ ${t}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      document.getElementById('overlay').classList.add('show');
+      document.getElementById('detailPanel').classList.add('open');
+    }
+
+    function closeDetail() {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('detailPanel').classList.remove('open');
+    }
+
+    function loadData() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>

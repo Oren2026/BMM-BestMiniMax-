@@ -1,0 +1,137 @@
+{
+  "lastUpdated": "2026-06-02T11:13:00Z",
+  "agents": [
+    {
+      "id": "mavis",
+      "name": "Mavis",
+      "role": "Root/Leader",
+      "status": "active",
+      "sessionId": "404585416609955",
+      "model": "MiniMax-M2.7",
+      "description": "團隊領導者，負責協調、决策與品質管控",
+      "responsibilities": ["任務分解與路由", "團隊協調與决策", "最終品質把關", "與用戶直接溝通"],
+      "completedTasks": ["Portfolio 網站建置", "Agent 架構初始化", "SSH Key 部署設定", "本儀表板開發"]
+    },
+    {
+      "id": "general",
+      "name": "General",
+      "role": "Worker - 通用工作者",
+      "status": "inactive",
+      "sessionId": "404585416609956",
+      "model": "MiniMax-M2.7",
+      "description": "通用工作者，灵活适配各类任务，不擅长的主动转交专家",
+      "responsibilities": ["多樣化任務執行", "資料研究與分析", "非專業領域處理"],
+      "completedTasks": ["團隊計劃執行", "並行任務處理"]
+    },
+    {
+      "id": "coder",
+      "name": "Coder",
+      "role": "Worker - 軟體工程師",
+      "status": "inactive",
+      "sessionId": "404585416609957",
+      "model": "MiniMax-M2.7",
+      "description": "Hands-on software engineer — reads code, writes code, ships code",
+      "responsibilities": ["程式碼開發", "功能實現", "架構設計"],
+      "completedTasks": ["軟體開發任務"]
+    },
+    {
+      "id": "verifier",
+      "name": "Verifier",
+      "role": "Worker - 驗證專家",
+      "status": "inactive",
+      "sessionId": "404585416609958",
+      "model": "MiniMax-M2.7",
+      "description": "Adversarial verification specialist — tries to break deliverables before they ship",
+      "responsibilities": ["品質驗證", "問題發現", "極限測試"],
+      "completedTasks": ["測試驗證任務"]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "404585416609955",
+      "agentName": "Mavis",
+      "title": "Mavis",
+      "type": "root",
+      "status": "active",
+      "model": "MiniMax-M2.7",
+      "createdAt": "2026-06-02T02:43:32Z"
+    },
+    {
+      "id": "404585416609956",
+      "agentName": "General",
+      "title": "General",
+      "type": "branch",
+      "status": "inactive",
+      "model": "MiniMax-M2.7",
+      "createdAt": "2026-06-02T02:43:27Z"
+    },
+    {
+      "id": "404585416609957",
+      "agentName": "Coder",
+      "title": "Coder",
+      "type": "branch",
+      "status": "inactive",
+      "model": "MiniMax-M2.7",
+      "createdAt": "2026-06-02T02:43:27Z"
+    },
+    {
+      "id": "404585416609958",
+      "agentName": "Verifier",
+      "title": "Verifier",
+      "type": "branch",
+      "status": "inactive",
+      "model": "MiniMax-M2.7",
+      "createdAt": "2026-06-02T02:43:27Z"
+    },
+    {
+      "id": "404584934703223",
+      "agentName": "Mavis",
+      "title": "建立Agent框架結構",
+      "type": "general",
+      "status": "archived",
+      "model": "MiniMax-M3",
+      "createdAt": "2026-06-02T02:44:05Z"
+    },
+    {
+      "id": "404585416609954",
+      "agentName": "Mavis",
+      "title": "Mavis ",
+      "type": "general",
+      "status": "archived",
+      "model": "MiniMax-M2.7",
+      "createdAt": "2026-06-02T02:43:27Z"
+    }
+  ],
+  "timeline": [
+    {
+      "time": "2026-06-02T02:43:27Z",
+      "event": "系統初始化，創建 Agent 團隊架構"
+    },
+    {
+      "time": "2026-06-02T02:43:32Z",
+      "event": "Mavis Root Session 啟動，作為主要對話窗口"
+    },
+    {
+      "time": "2026-06-02T02:43:32Z",
+      "event": "General、Coder、Verifier 三個 Worker Agent 生成"
+    },
+    {
+      "time": "2026-06-02T02:44:05Z",
+      "event": "建立 Agent 框架結構 Session (已歸檔)"
+    },
+    {
+      "time": "2026-06-02T03:10:00Z",
+      "event": "建立 Portfolio 作品展示網站 (Next.js + Auth)"
+    },
+    {
+      "time": "2026-06-02T11:13:00Z",
+      "event": "建立 Agent 架構儀表板系統"
+    }
+  ],
+  "stats": {
+    "totalAgents": 4,
+    "activeSessions": 2,
+    "workerAgents": 3,
+    "totalSessions": 6
+  }
+}
