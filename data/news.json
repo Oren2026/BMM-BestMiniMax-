@@ -1,0 +1,320 @@
+{
+  "news": [
+    {
+      "id": "N001",
+      "title": "AI 資料中心用電量 2025 年飆升，2030 年將翻倍",
+      "content": "IEA 報告顯示，資料中心用電量在 2025 年飆升 17%，AI 資料中心用電成長更快。預計到 2030 年，全球資料中心用電量將翻倍，AI 資料中心用電將增加三倍。五大科技公司資本支出飆升至超過 4000 億美元，2026 年將再增加 75%。",
+      "category": "ENERGY",
+      "source": "IEA",
+      "url": "https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions",
+      "publishedAt": "2026-06-02",
+      "tags": ["IEA", "資料中心", "用電", "AI"]
+    },
+    {
+      "id": "N002",
+      "title": "電力網絡連接成為 AI 發展的策略瓶頸",
+      "content": "WEF 報告指出，AI 資料中心投資增速超過電網負荷能力。在許多地區，連接新設施到電網可能需要 4-10 年，而 AI 資料中心通常在 2-3 年內規劃和建設。北美預計到 2030 年將消耗全球資料中心用電量的一半。",
+      "category": "ENERGY",
+      "source": "World Economic Forum",
+      "url": "https://www.weforum.org/stories/2026/05/electricity-data-grid-connectivity-strategic-bottleneck-ai-transformation/",
+      "publishedAt": "2026-05-30",
+      "tags": ["電網", "基礎設施", "AI"]
+    },
+    {
+      "id": "N003",
+      "title": "AI 資料中心可能造成用戶電力短缺",
+      "content": "Forbes 報導，在 El Paso，Meta 正在建設 120 萬平方英尺的資料中心，將消耗 1 GW 電力——足夠供 20 萬戶家庭使用。專家警告，AI 對電力的需求將與住宅和工業用戶競爭，可能需要數百億美元的新發電和電網升級。",
+      "category": "ENERGY",
+      "source": "Forbes",
+      "url": "https://www.forbes.com/sites/kensilverstein/2025/12/15/as-ai-booms-data-centers-may-create-electricity-scarcity-among-users/",
+      "publishedAt": "2025-12-15",
+      "tags": ["Meta", "資料中心", "電力短缺"]
+    },
+    {
+      "id": "N004",
+      "title": "美國基礎設施能否跟上 AI 經濟發展？",
+      "content": "Deloitte 調查顯示，72% 受訪者認為電力/電網容量是資料中心基礎設施擴建的主要挑戰。79% 受訪者表示 AI 將在 2035 年前增加電力需求。目前有些地區的電網連接請求需要等待 7 年。",
+      "category": "ENERGY",
+      "source": "Deloitte",
+      "url": "https://www.deloitte.com/us/en/insights/industry/power-and-utilities/data-center-infrastructure-artificial-intelligence.html",
+      "publishedAt": "2025-04-01",
+      "tags": ["Deloitte", "電網", "挑戰"]
+    },
+    {
+      "id": "N005",
+      "title": "AI 資料中心對電網的影響：挑戰與前景",
+      "content": "根據 arXiv 論文，AWS 從賓州核電站直接採購約 960 MW 電力。Google 與 Kairos Power 簽署協議，部署小型模組化反應爐，為 AI 資料中心提供高達 500 MW 的清潔電力。到 2030 年，資料中心用電量預計超過 945 TWh。",
+      "category": "ENERGY",
+      "source": "arXiv",
+      "url": "https://arxiv.org/html/2509.07218v3",
+      "publishedAt": "2025-09-08",
+      "tags": ["AWS", "核能", "Google", "太陽能"]
+    },
+    {
+      "id": "N006",
+      "title": "AI 資料中心 2025 年能源回顧：電力危機",
+      "content": "2025 年資料中心迫使能源系統做出調整。立法者審議了 238 項資料中心相關法案，其中一半專門解決能源問題。科技公司簽署了大量再生能源採購協議。Aligned Data Centers 宣布在太平洋西北地區建設大型電池儲能設施。",
+      "category": "ENERGY",
+      "source": "Canary Media",
+      "url": "https://www.canarymedia.com/articles/data-centers/solutions-ai-power-demand-2025-grid",
+      "publishedAt": "2025-12-27",
+      "tags": ["政策", "再生能源", "電池"]
+    },
+    {
+      "id": "N007",
+      "title": "AI 是否會引發核能復興？",
+      "content": "UN News 報導，預計到 2035 年，全球電力需求將增加超過 10,000 TWh。AI 是主要推手——資料中心用電量相當於 10 萬戶家庭。IEA 指出，資料中心需求從 2023 年到 2024 年增長超過 75%，預計到 2030 年將佔先進經濟體電力需求成長的 20% 以上。",
+      "category": "ENERGY",
+      "source": "UN News",
+      "url": "https://news.un.org/en/story/2026/01/1166768",
+      "publishedAt": "2026-01-01",
+      "tags": ["核能", "UN", "電力需求"]
+    },
+    {
+      "id": "N008",
+      "title": "AI 資料中心用電量將佔美國 9% 電力",
+      "content": "ACEEE 白皮書指出，AI 資料中心正快速增加電力需求，預計到 2030 年可能佔美國電網需求的近 9%。需要新指標如能源/AI 任務和電網感知計算來衡量效率。",
+      "category": "ENERGY",
+      "source": "ACEEE",
+      "url": "https://www.aceee.org/white-paper/2025/04/future-proof-ai-data-centers-grid-reliability-and-affordable-energy",
+      "publishedAt": "2025-04-01",
+      "tags": ["ACEEE", "電力預測", "效率"]
+    },
+    {
+      "id": "N009",
+      "title": "美國資料中心用電量：AI 繁榮期間的了解",
+      "content": "Pew Research 指出，美國擁有超過 4,000 個資料中心，三分之一集中在維吉尼亞州 (643)、德州 (395) 和加州 (319)。2024 年美國資料中心消耗 183 TWh，約佔全國用電的 4%。到 2030 年預計增長 133% 達 426 TWh。",
+      "category": "ENERGY",
+      "source": "Pew Research",
+      "url": "https://www.pewresearch.org/short-reads/2025/10/24/what-we-know-about-energy-use-at-us-data-centers-amid-the-ai-boom/",
+      "publishedAt": "2025-10-24",
+      "tags": ["Pew", "美國", "資料中心分布"]
+    },
+    {
+      "id": "N010",
+      "title": "AI 與電力網絡：關鍵時刻",
+      "content": "BloombergNEF 預測，美國資料中心用電到 2035 年將達到 106 GW，較七個月前的預測增加 36%。在 PJM，BNEF 預測資料中心容量到 2030 年可能達到 31 GW。",
+      "category": "ENERGY",
+      "source": "BloombergNEF",
+      "url": "https://about.bnef.com/insights/clean-energy/ai-and-the-power-grid-where-the-rubber-meets-the-road/",
+      "publishedAt": "2025-12-01",
+      "tags": ["BloombergNEF", "用電預測"]
+    },
+    {
+      "id": "N011",
+      "title": "NVIDIA 發布 RTX Spark AI 晶片，瞄準個人電腦",
+      "content": "NVIDIA 執行長黃仁勳在 Computex 發布 RTX Spark 超級晶片，將於秋季搭載於聯想、惠普、戴爾和 Microsoft Surface 的新 Windows PC 中。這款結合 CPU 和 GPU 的晶片專為 AI 時代的個人助理而設計。",
+      "category": "NVIDIA",
+      "source": "NVIDIA News",
+      "url": "https://www.aljazeera.com/amp/economy/2026/6/1/nvidia-unveils-new-chip-to-bring-ai-directly-to-personal-computers",
+      "publishedAt": "2026-06-01",
+      "tags": ["RTX Spark", "Computex", "PC"]
+    },
+    {
+      "id": "N012",
+      "title": "NVIDIA Rubin 平台：下一代 AI 超級電腦",
+      "content": "NVIDIA 發布 Rubin 平台，包含六款新晶片，為構建和部署全球最大、最先進 AI 系統提供最低成本的解決方案。Rubin 平台將加速 agentic AI、先進推理和大规模專家混合 (MoE) 模型推理，推理成本比 Blackwell 低 10 倍。",
+      "category": "NVIDIA",
+      "source": "NVIDIA News",
+      "url": "https://nvidianews.nvidia.com/news/rubin-platform-ai-supercomputer",
+      "publishedAt": "2026-03-19",
+      "tags": ["Rubin", "Vera", "下一代"]
+    },
+    {
+      "id": "N013",
+      "title": "2025 年 NVIDIA 十大故事：從資料中心到 AI 工廠",
+      "content": "NVIDIA CEO 黃仁勳將 AI 工廠概念普及化，指的是專門「製造智慧」的資料中心。Blackwell GPU 架構投產，Rubin 架構接續。NVIDIA 進入 6G 和電信領域，推出 AI-RAN 聯盟。",
+      "category": "NVIDIA",
+      "source": "Network World",
+      "url": "https://www.networkworld.com/article/4111630/top-10-nvidia-stories-of-2025-from-data-center-to-ai-factory.html",
+      "publishedAt": "2025-12-26",
+      "tags": ["AI 工廠", "Blackwell", "電信"]
+    },
+    {
+      "id": "N014",
+      "title": "NVIDIA 計劃為中國推出低成本 AI 晶片",
+      "content": "NVIDIA 計劃 6 月為中國推出低成本 AI 晶片，以在美國出口管制下保持市場份額。這款新晶片可能取代 H20，向中國客戶提供符合規定的 AI 硬體。",
+      "category": "NVIDIA",
+      "source": "Reuters",
+      "url": "https://www.reuters.com/business/nvidia-plans-new-chip-speed-ai-processing-wsj-reports-2026-02-28/",
+      "publishedAt": "2026-02-28",
+      "tags": ["中國", "H20", "出口管制"]
+    },
+    {
+      "id": "N015",
+      "title": "NVIDIA 收購 Intel 5% 股權，價值 50 億美元",
+      "content": "NVIDIA 以 50 億美元收購 Intel 5% 股權，成為第二大股東。此交易使 NVIDIA 能更好地進入 x86 生態系統，並為 Intel 提供急需的 GPU 需求。",
+      "category": "NVIDIA",
+      "source": "Reuters",
+      "url": "https://www.networkworld.com/article/3562856/nvidia-latest-news-and-insights__trashed.html",
+      "publishedAt": "2025-09-22",
+      "tags": ["Intel", "收購", "投資"]
+    },
+    {
+      "id": "N016",
+      "title": "OpenAI 與 NVIDIA 策略合作，部署至少 10 GW",
+      "content": "OpenAI 和 NVIDIA 建立策略合作關係，將部署至少 10 GW 的 NVIDIA 系統用於 OpenAI 下一代 AI 基礎設施。第一階段預計於 2026 年下半年上線，使用 NVIDIA 的 Vera Rubin CPU/GPU 組合平台。",
+      "category": "NVIDIA",
+      "source": "NVIDIA News",
+      "url": "https://nvidianews.nvidia.com/news/rubin-platform-ai-supercomputer",
+      "publishedAt": "2025-09-23",
+      "tags": ["OpenAI", "策略合作", "基礎設施"]
+    },
+    {
+      "id": "N017",
+      "title": "NVIDIA 收購 Enfabrica，價值超過 9 億美元",
+      "content": "NVIDIA 挖走了晶片互連製造商 Enfabrica 的 CEO 和員工，並授權其核心技術。交易價值超過 9 億美元，反映了對運算能力的需求，以支持 OpenAI、Anthropic、Mistral、AWS、微軟和 Google 等公司。",
+      "category": "NVIDIA",
+      "source": "Reuters",
+      "url": "https://www.networkworld.com/article/3562856/nvidia-latest-news-and-insights__trashed.html",
+      "publishedAt": "2025-09-19",
+      "tags": ["Enfabrica", "併購", "互連"]
+    },
+    {
+      "id": "N018",
+      "title": "2025 年 AI 科學突破",
+      "content": "AI 在 2025 年實現多項科學突破：阿茲海默症診斷更快、AI 發現特定基因是阿茲海默症原因、Google 發布 AlphaGenome 了解疾病並發現新藥、天氣預測更準確、MIT 用 AI 找到新水泥替代品。",
+      "category": "AI",
+      "source": "Axios",
+      "url": "https://www.axios.com/2025/12/31/2025-ai-scientific-breakthroughs",
+      "publishedAt": "2025-12-31",
+      "tags": ["科學", "醫療", "天氣預測"]
+    },
+    {
+      "id": "N019",
+      "title": "2025 年 AI 十大技術突破",
+      "content": "2025 年最重要突破：ChatGPT 達 8 億月活躍用戶、Perplexity 成長 370%、AI 搜尋改變資訊獲取方式、Sora 2 進入主流、DeepSeek-V3 以低成本匹配頂級模型、Claude Code、GitHub Copilot 改變軟體開發。",
+      "category": "AI",
+      "source": "Stellar Capacity",
+      "url": "https://www.stellarcapacity.com/post/the-10-ai-tech-breakthroughs-that-actually-mattered-in-2025",
+      "publishedAt": "2025-12-31",
+      "tags": ["ChatGPT", "DeepSeek", "Copilot"]
+    },
+    {
+      "id": "N020",
+      "title": "Google 2025 年研究突破：AI 基礎設施與應用",
+      "content": "Google 介紹 Ironwood TPU，這是專為推理時代設計的 TPU，由 AlphaChip 方法設計。Gemini 3 在 LMArena 排行榜上名列前茅，在數學和推理方面設立新標準。",
+      "category": "AI",
+      "source": "Google Blog",
+      "url": "https://blog.google/innovation-and-ai/products/2025-research-breakthroughs/",
+      "publishedAt": "2025-12-01",
+      "tags": ["Google", "Ironwood", "Gemini"]
+    },
+    {
+      "id": "N021",
+      "title": "AI 發展是否會引發核能復興？",
+      "content": "AI 技術由資料中心供電，一個中型資料中心的用電量相當於 10 萬戶家庭。IEA 指出，資料中心需求預計到 2030 年將佔先進經濟體用電成長的 20% 以上。核能可能是解決方案之一。",
+      "category": "AI",
+      "source": "UN News",
+      "url": "https://news.un.org/en/story/2026/01/1166768",
+      "publishedAt": "2026-01-01",
+      "tags": ["核能", "電力", "資料中心"]
+    },
+    {
+      "id": "N022",
+      "title": "五個塑造未來的 AI 突破：2025 年 6 月 AI 新聞",
+      "content": "GPT-5 承諾智慧飛躍；Meta 投資 140 億美元加速基礎設施；FDA 的 INTACT 將 AI 引入監管領域；職場 AI 使用已成為主流；城市成為 AI 部署的實驗室。",
+      "category": "AI",
+      "source": "Launch Consulting",
+      "url": "https://www.launchconsulting.com/posts/five-ai-breakthroughs-shaping-the-future-june-2025-ai-news",
+      "publishedAt": "2025-06-30",
+      "tags": ["GPT-5", "Meta", "FDA"]
+    },
+    {
+      "id": "N023",
+      "title": "2025 年 AI 技術突破與未來展望",
+      "content": "AI 在 2025 年實現從大模型到通用人工智能的突破。多模態 AI、agentic AI、機器人 AI 是主要趨勢。DeepSeek R1 以低成本實現頂級性能，挑戰西方 AI 霸權。",
+      "category": "AI",
+      "source": "今日頭條",
+      "url": "https://www.toutiao.com/article/7472971922477842980/",
+      "publishedAt": "2025-03-11",
+      "tags": ["DeepSeek", "多模態", "AGI"]
+    },
+    {
+      "id": "N024",
+      "title": "人形機器人進入量產元年",
+      "content": "2025 年是人形機器人量產的元年。特斯拉的 Optimus 和智元機器人等產品開始批量生產，目標售價降至 20 萬元以下。這些機器人不僅在工業製造中發揮作用，還逐漸進入服務領域。",
+      "category": "ROBOTICS",
+      "source": "今日頭條",
+      "url": "https://www.toutiao.com/article/7472971922477842980/",
+      "publishedAt": "2025-03-11",
+      "tags": ["人形機器人", "Tesla", "Optimus"]
+    },
+    {
+      "id": "N025",
+      "title": "Google Gemini Robotics 讓機器人學習而非遵循腳本",
+      "content": "Figure、1X NEO 和 Boston Dynamics 都推出了能學習而非遵循腳本的機器人。物理任務的基礎模型成為現實。Google 的 Gemini Robotics 是主要故事之一。",
+      "category": "ROBOTICS",
+      "source": "Stellar Capacity",
+      "url": "https://www.stellarcapacity.com/post/the-10-ai-tech-breakthroughs-that-actually-mattered-in-2025",
+      "publishedAt": "2025-12-31",
+      "tags": ["Google", "機器人", "學習"]
+    },
+    {
+      "id": "N026",
+      "title": "NVIDIA 與 GM 合作開發自動駕駛系統",
+      "content": "NVIDIA 和 General Motors 合作開發自動駕駛汽車系統，並將 AI 整合到製造流程和未來車輛中。這是 NVIDIA 進軍汽車產業的重要一步。",
+      "category": "ROBOTICS",
+      "source": "Xenya",
+      "url": "https://xenya.si/nvidia-gtc-2025-jensen-huang-unveils-the-future-of-ai-with-new-chips-and-robotics/",
+      "publishedAt": "2025-03-19",
+      "tags": ["GM", "自動駕駛", "合作"]
+    },
+    {
+      "id": "N027",
+      "title": "NVIDIA 推出 Isaac GR00T N1 開源人形機器人模型",
+      "content": "NVIDIA 在 GTC 2025 發布 Isaac GR00T N1，這是專為人形機器人開發的開源模型，能夠更快、更高效地學習和適應各種任務。Cosmos AI 模型促進合成資料生成以訓練機器人。",
+      "category": "ROBOTICS",
+      "source": "Xenya",
+      "url": "https://xenya.si/nvidia-gtc-2025-jensen-huang-unveils-the-future-of-ai-with-new-chips-and-robotics/",
+      "publishedAt": "2025-03-19",
+      "tags": ["Isaac", "GR00T", "開源"]
+    },
+    {
+      "id": "N028",
+      "title": "AI 為中國資料中心供電：最大挑戰來臨",
+      "content": "Bloomberg 圖表顯示，AI 資料中心正在消耗大量電力，導致電費飆升。資料中心在維吉尼亞州和其他地區蓬勃發展，而巴爾的摩的一位盲人突然面對大幅上涨的電費。",
+      "category": "TECH",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/graphics/2025-ai-data-centers-electricity-prices/",
+      "publishedAt": "2025-12-01",
+      "tags": ["Bloomberg", "電費", "美國"]
+    },
+    {
+      "id": "N029",
+      "title": "GPT-5 夏季發布：智慧飛躍在即",
+      "content": "OpenAI CEO Sam Altman 表示 GPT-5 將在夏季發布，初期承諾在理解、推理、記憶和適應方面實現變革性改進。但發布時間取決於能否通過嚴格的安全和性能基準測試。",
+      "category": "AI",
+      "source": "Launch Consulting",
+      "url": "https://www.launchconsulting.com/posts/five-ai-breakthroughs-shaping-the-future-june-2025-ai-news",
+      "publishedAt": "2025-06-01",
+      "tags": ["GPT-5", "OpenAI", "夏季"]
+    },
+    {
+      "id": "N030",
+      "title": "AI 資料中心推動全球能源需求結構",
+      "content": "全球 AI 高速發展，資料量高增拉動電力需求。IEA 估計 2022 年資料中心用電量達 460 TWh，預計 2026 年將達 620-1050 TWh。AI 資料中心的用能密度將遠高於傳統資料中心。",
+      "category": "ENERGY",
+      "source": "三個皮匠報告",
+      "url": "https://www.sgpjbg.com/hyshuju/162f3c377c78ba05f019664429672a56.html",
+      "publishedAt": "2025-01-01",
+      "tags": ["IEA", "用電預測", "全球"]
+    }
+  ],
+  "categories": {
+    "AI": { "label": "AI 人工智慧", "color": "#8b5cf6", "icon": "🤖", "description": "AI 模型、機器學習、深度學習、應用" },
+    "ENERGY": { "label": "能源電網", "color": "#f97316", "icon": "⚡", "description": "資料中心用電、電網負載、能源解決方案" },
+    "NVIDIA": { "label": "NVIDIA 輝達", "color": "#22c55e", "icon": "🎨", "description": "NVIDIA 晶片、GPU、架構、產品發布" },
+    "TECH": { "label": "科技應用", "color": "#3b82f6", "icon": "💻", "description": "裝置、產品、應用場景、科技趨勢" },
+    "ROBOTICS": { "label": "機器人", "color": "#ec4899", "icon": "🦾", "description": "人形機器人、自動化、無人載具" }
+  },
+  "lastUpdated": "2026-06-02T11:46:00Z",
+  "stats": {
+    "total": 30,
+    "AI": 10,
+    "ENERGY": 10,
+    "NVIDIA": 7,
+    "TECH": 1,
+    "ROBOTICS": 3
+  }
+}
