@@ -1,0 +1,67 @@
+{
+  "summary": {
+    "totalApiCalls": 47,
+    "tasksCompleted": 15,
+    "projectsCount": 4,
+    "collaborationEvents": 23,
+    "lastUpdated": "2026-06-02T11:32:00Z"
+  },
+  "agentStats": [
+    {
+      "agentId": "mavis",
+      "name": "Mavis",
+      "role": "Root/Leader",
+      "apiCalls": 32,
+      "projectsHandled": 4,
+      "collaborations": 18,
+      "tasks": [
+        { "id": "T001", "name": "Portfolio 網站建置", "status": "completed", "date": "2026-06-02T03:10:00Z" },
+        { "id": "T002", "name": "Agent 架構初始化", "status": "completed", "date": "2026-06-02T02:43:32Z" },
+        { "id": "T003", "name": "SSH Key 部署設定", "status": "completed", "date": "2026-06-02T11:26:00Z" },
+        { "id": "T004", "name": "Agent Dashboard 開發", "status": "completed", "date": "2026-06-02T11:13:00Z" },
+        { "id": "T005", "name": "KPI 新聞系統建立", "status": "completed", "date": "2026-06-02T11:32:00Z" }
+      ]
+    },
+    {
+      "agentId": "general",
+      "name": "General",
+      "role": "Worker - 通用工作者",
+      "apiCalls": 8,
+      "projectsHandled": 2,
+      "collaborations": 5,
+      "tasks": [
+        { "id": "T006", "name": "團隊計劃執行", "status": "completed", "date": "2026-06-02T02:44:00Z" },
+        { "id": "T007", "name": "並行任務處理", "status": "completed", "date": "2026-06-02T03:00:00Z" }
+      ]
+    },
+    {
+      "agentId": "coder",
+      "name": "Coder",
+      "role": "Worker - 軟體工程師",
+      "apiCalls": 4,
+      "projectsHandled": 1,
+      "collaborations": 2,
+      "tasks": [
+        { "id": "T008", "name": "軟體開發任務", "status": "completed", "date": "2026-06-02T03:05:00Z" }
+      ]
+    },
+    {
+      "agentId": "verifier",
+      "name": "Verifier",
+      "role": "Worker - 驗證專家",
+      "apiCalls": 3,
+      "projectsHandled": 1,
+      "collaborations": 2,
+      "tasks": [
+        { "id": "T009", "name": "測試驗證任務", "status": "completed", "date": "2026-06-02T03:08:00Z" }
+      ]
+    }
+  ],
+  "apiCallHistory": [
+    { "id": "AC001", "agent": "mavis", "endpoint": "/api/auth/request-code", "timestamp": "2026-06-02T03:10:15Z", "status": "success" },
+    { "id": "AC002", "agent": "mavis", "endpoint": "/api/auth/verify", "timestamp": "2026-06-02T03:10:45Z", "status": "success" },
+    { "id": "AC003", "agent": "general", "endpoint": "agent/list", "timestamp": "2026-06-02T11:13:05Z", "status": "success" },
+    { "id": "AC004", "agent": "mavis", "endpoint": "agent/create", "timestamp": "2026-06-02T02:43:28Z", "status": "success" },
+    { "id": "AC005", "agent": "mavis", "endpoint": "team/run", "timestamp": "2026-06-02T03:00:00Z", "status": "success" }
+  ]
+}

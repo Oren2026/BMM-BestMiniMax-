@@ -1,0 +1,59 @@
+{
+  "news": [
+    {
+      "id": "N001",
+      "title": "Agent 團隊系統正式啟動",
+      "content": "Mavis 領導的 Agent 團隊正式上線，包含 General、Coder、Verifier 三個 Worker Agent",
+      "category": "system",
+      "agents": ["Mavis", "General", "Coder", "Verifier"],
+      "timestamp": "2026-06-02T02:43:32Z",
+      "priority": "high"
+    },
+    {
+      "id": "N002",
+      "title": "Portfolio 作品展示網站上線",
+      "content": "使用 Next.js + Tailwind CSS + SQLite 建置的學校作品展示網站，包含學校信箱驗證、主題切換、作品卡片展示等功能",
+      "category": "project",
+      "agents": ["Mavis", "General"],
+      "project": "Portfolio",
+      "timestamp": "2026-06-02T03:10:00Z",
+      "priority": "high"
+    },
+    {
+      "id": "N003",
+      "title": "Agent Dashboard 發布",
+      "content": "互動式 Agent 架構儀表板上線，即時顯示組織圖、Session 狀態、工作時間軸",
+      "category": "project",
+      "agents": ["Mavis"],
+      "project": "Dashboard",
+      "timestamp": "2026-06-02T11:15:00Z",
+      "priority": "medium"
+    },
+    {
+      "id": "N004",
+      "title": "Dashboard 部署到 GitHub",
+      "content": "Agent Dashboard 成功部署到 Oren2026/BMM-BestMiniMax- GitHub 倉庫",
+      "category": "deployment",
+      "agents": ["Mavis"],
+      "project": "Dashboard",
+      "timestamp": "2026-06-02T11:28:30Z",
+      "priority": "medium"
+    },
+    {
+      "id": "N005",
+      "title": "KPI 追蹤系統啟用",
+      "content": "新增 API 調用追蹤、任務記錄、新聞事件記錄功能，完善系統資訊對齊",
+      "category": "system",
+      "agents": ["Mavis"],
+      "project": "KPI System",
+      "timestamp": "2026-06-02T11:32:00Z",
+      "priority": "medium"
+    }
+  ],
+  "categories": {
+    "system": { "label": "系統", "color": "#8b5cf6" },
+    "project": { "label": "專案", "color": "#3b82f6" },
+    "deployment": { "label": "部署", "color": "#22c55e" },
+    "collaboration": { "label": "協作", "color": "#f97316" }
+  }
+}

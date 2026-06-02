@@ -1,0 +1,98 @@
+{
+  "tasks": [
+    {
+      "id": "T001",
+      "name": "Portfolio 網站建置",
+      "description": "建立學校作品展示網站，含登入系統與驗證郵箱限制",
+      "agent": "Mavis",
+      "collaborators": ["General"],
+      "project": "Portfolio",
+      "status": "completed",
+      "createdAt": "2026-06-02T02:50:00Z",
+      "completedAt": "2026-06-02T03:10:00Z",
+      "priority": "high"
+    },
+    {
+      "id": "T002",
+      "name": "Agent 架構初始化",
+      "description": "建立 Agent 團隊框架結構 (Mavis, General, Coder, Verifier)",
+      "agent": "Mavis",
+      "collaborators": [],
+      "project": "System",
+      "status": "completed",
+      "createdAt": "2026-06-02T02:43:27Z",
+      "completedAt": "2026-06-02T02:43:35Z",
+      "priority": "critical"
+    },
+    {
+      "id": "T003",
+      "name": "SSH Key 部署設定",
+      "description": "設定 SSH 金鑰以便部署到 GitHub",
+      "agent": "Mavis",
+      "collaborators": [],
+      "project": "Infrastructure",
+      "status": "completed",
+      "createdAt": "2026-06-02T11:26:00Z",
+      "completedAt": "2026-06-02T11:26:30Z",
+      "priority": "medium"
+    },
+    {
+      "id": "T004",
+      "name": "Agent Dashboard 開發",
+      "description": "建立互動式 Agent 架構儀表板，包含組織圖、Session 清單、時間軸",
+      "agent": "Mavis",
+      "collaborators": [],
+      "project": "Dashboard",
+      "status": "completed",
+      "createdAt": "2026-06-02T11:13:00Z",
+      "completedAt": "2026-06-02T11:15:00Z",
+      "priority": "high"
+    },
+    {
+      "id": "T005",
+      "name": "KPI 新聞系統建立",
+      "description": "建立 KPI 追蹤系統與新聞記錄機制",
+      "agent": "Mavis",
+      "collaborators": [],
+      "project": "KPI System",
+      "status": "completed",
+      "createdAt": "2026-06-02T11:32:00Z",
+      "completedAt": "2026-06-02T11:35:00Z",
+      "priority": "medium"
+    }
+  ],
+  "projects": [
+    {
+      "id": "P001",
+      "name": "Portfolio",
+      "description": "學校作品展示網站",
+      "agents": ["Mavis", "General"],
+      "taskCount": 1,
+      "status": "completed"
+    },
+    {
+      "id": "P002",
+      "name": "Dashboard",
+      "description": "Agent 架構儀表板系統",
+      "agents": ["Mavis"],
+      "taskCount": 1,
+      "status": "completed"
+    },
+    {
+      "id": "P003",
+      "name": "System",
+      "description": "Agent 團隊系統架構",
+      "agents": ["Mavis", "General", "Coder", "Verifier"],
+      "taskCount": 1,
+      "status": "completed"
+    },
+    {
+      "id": "P004",
+      "name": "KPI System",
+      "description": "KPI 追蹤與新聞系統",
+      "agents": ["Mavis"],
+      "taskCount": 1,
+      "status": "completed"
+    }
+  ]
+}
