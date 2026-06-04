@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔬 實驗室白板 - 共享行事曆</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Noto Sans TC', 'PingFang TC', sans-serif; 
+      background: #0a0a0f; 
+      color: #fff; 
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #1a1f35;
+      height: 72px;
+    }
+    .header h1 { font-size: 24px; font-weight: 700; }
+    .header h1 span { color: #60a5fa; }
+    .clock { margin-left: auto; text-align: right; }
+    .clock-time { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .clock-date { font-size: 12px; color: #888; }
+    
+    .timeline-container {
+      display: flex;
+      height: calc(100vh - 72px - 48px);
+      overflow: hidden;
+    }
+    
+    .timeline {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px 32px;
+      overflow: hidden;
+    }
+    
+    .day-row {
+      display: flex;
+      gap: 16px;
+      background: #111827;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+      min-height: 80px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateX(20px);
+      animation: slideIn 0.4s ease forwards;
+    }
+    .day-row:nth-child(1) { animation-delay: 0s; }
+    .day-row:nth-child(2) { animation-delay: 0.1s; }
+    .day-row:nth-child(3) { animation-delay: 0.2s; }
+    .day-row:nth-child(4) { animation-delay: 0.3s; }
+    .day-row:nth-child(5) { animation-delay: 0.4s; }
+    .day-row:nth-child(6) { animation-delay: 0.5s; }
+    .day-row:nth-child(7) { animation-delay: 0.6s; }
+    .day-row:nth-child(8) { animation-delay: 0.7s; }
+    .day-row:nth-child(9) { animation-delay: 0.8s; }
+    .day-row:nth-child(10) { animation-delay: 0.9s; }
+    
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .day-row:hover {
+      border-color: #3b82f6;
+      transform: scale(1.01);
+    }
+    
+    .day-date {
+      width: 160px;
+      min-width: 160px;
+      background: #1a1f35;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-right: 1px solid #2a2a3a;
+    }
+    .date-weekday { font-size: 14px; color: #888; margin-bottom: 4px; }
+    .date-day { font-size: 32px; font-weight: 700; }
+    .date-month { font-size: 14px; color: #60a5fa; }
+    
+    .day-row.today .day-date {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+    .day-row.today .date-day { color: #fff; }
+    .day-row.today .date-month { color: rgba(255,255,255,0.8); }
+    .day-row.today .date-weekday { color: rgba(255,255,255,0.7); }
+    
+    .day-events {
+      flex: 1;
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      align-items: center;
+    }
+    .day-events::-webkit-scrollbar { height: 4px; }
+    .day-events::-webkit-scrollbar-track { background: #1f2937; border-radius: 2px; }
+    .day-events::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 2px; }
+    
+    .event-card {
+      min-width: 200px;
+      max-width: 200px;
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 12px;
+      border-left: 4px solid;
+      flex-shrink: 0;
+    }
+    .event-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      writing-mode: horizontal-tb;
+    }
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #888;
+    }
+    .event-avatar { width: 20px; height: 20px; border-radius: 50%; }
+    .event-person { flex: 1; }
+    .event-time { color: #60a5fa; }
+    
+    .no-events {
+      color: #4b5563;
+      font-size: 13px;
+      padding: 12px;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: #0f172a;
+      border-left: 1px solid #1f2937;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+    
+    .panel {
+      background: #111827;
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 12px 14px;
+      background: #1a1f35;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-body { padding: 12px; }
+    
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .member-item:last-child { margin-bottom: 0; }
+    .member-avatar { width: 28px; height: 28px; border-radius: 50%; }
+    .member-name { font-size: 13px; flex: 1; }
+    .member-dot { width: 8px; height: 8px; border-radius: 50%; }
+    
+    /* Navigation */
+    .nav-bar {
+      height: 48px;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      border-top: 1px solid #1f2937;
+      font-size: 12px;
+    }
+    .nav-btn {
+      background: #1f2937;
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: #2563eb; }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .page-indicator { color: #888; }
+    .links-bar {
+      display: flex;
+      gap: 16px;
+      margin-left: auto;
+      margin-right: 16px;
+    }
+    .link-item { color: #666; text-decoration: none; transition: color 0.2s; }
+    .link-item:hover { color: #60a5fa; }
+    
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      bottom: 48px;
+      left: 0;
+      right: 280px;
+      height: 3px;
+      background: #1f2937;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.3s ease;
+    }
+    
+    /* Auto rotate hint */
+    .auto-hint {
+      position: fixed;
+      bottom: 56px;
+      right: 300px;
+      background: #1f2937;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 10px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔬 <span>實驗室</span>共享時段</h1>
+    <div class="clock">
+      <div class="clock-time" id="clock-time">--:--:--</div>
+      <div class="clock-date" id="clock-date">----/--/--</div>
+    </div>
+  </div>
+  
+  <div class="timeline-container">
+    <div class="timeline" id="timeline"></div>
+    
+    <div class="sidebar">
+      <div class="panel">
+        <div class="panel-header">👥 成員 <span id="member-count">(0)</span></div>
+        <div class="panel-body">
+          <div id="member-list"></div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="panel-header">📈 統計</div>
+        <div class="panel-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div style="text-align: center; padding: 12px; background: #0f172a; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700;" id="stat-total">0</div>
+              <div style="font-size: 10px; color: #888;">總行程</div>
+            </div>
+            <div style="text-align: center; padding: 12px; background: #0f172a; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700;" id="stat-free">0</div>
+              <div style="font-size: 10px; color: #888;">今日空堂</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="panel-header">🔄 自動輪播</div>
+        <div class="panel-body">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" id="auto-rotate" checked style="width: 16px; height: 16px;">
+              <span style="font-size: 13px;">開啟</span>
+            </label>
+            <span style="font-size: 11px; color: #888;">每 15 秒</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+  </div>
+  
+  <div class="nav-bar">
+    <button class="nav-btn" id="prev-btn" onclick="prevPage()">◀ 上一頁</button>
+    <span class="page-indicator" id="page-indicator">第 1 頁 / 共 1 頁</span>
+    <button class="nav-btn" id="next-btn" onclick="nextPage()">下一頁 ▶</button>
+    <div class="links-bar">
+      <a href="/" class="link-item">🏠 個人</a>
+      <a href="/board" class="link-item">📺 白板</a>
+    </div>
+  </div>
+  
+  <div class="auto-hint" id="auto-hint">⏱️ 15秒後自動跳轉...</div>
+
+  <script>
+    const DAYS_PER_PAGE = 10;
+    let users = [];
+    let events = [];
+    let currentPage = 0;
+    let totalPages = 1;
+    let autoRotateInterval = null;
+    let progressInterval = null;
+    let autoRotateEnabled = true;
+    
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock-time').textContent = now.toLocaleTimeString('zh-TW', { hour12: false });
+      document.getElementById('clock-date').textContent = now.toLocaleDateString('zh-TW');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    
+    // Load data
+    async function loadData() {
+      users = await fetch('/api/users').then(r => r.json());
+      events = await fetch('/api/events').then(r => r.json());
+      
+      renderSidebar();
+      renderTimeline();
+    }
+    
+    function renderSidebar() {
+      document.getElementById('member-count').textContent = `(${users.length})`;
+      
+      document.getElementById('member-list').innerHTML = users.map(u => `
+        <div class="member-item">
+          <img src="${u.avatar_url || 'https://api.dicebear.com/7.x/initials/svg?seed=' + u.name}" class="member-avatar" alt="${u.name}">
+          <span class="member-name">${u.name}</span>
+          <div class="member-dot" style="background: ${u.color}"></div>
+        </div>
+      `).join('');
+      
+      const today = new Date().toISOString().split('T')[0];
+      const todayEvents = events.filter(e => e.start_date === today);
+      const todayUsersBusy = new Set(todayEvents.map(e => e.user_id)).size;
+      
+      document.getElementById('stat-total').textContent = events.length;
+      document.getElementById('stat-free').textContent = users.length - todayUsersBusy;
+    }
+    
+    function getDaysArray(startDate, days) {
+      const result = [];
+      const today = new Date(startDate);
+      
+      for (let i = 0; i < days; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        result.push(date.toISOString().split('T')[0]);
+      }
+      return result;
+    }
+    
+    function renderTimeline() {
+      const timeline = document.getElementById('timeline');
+      const today = new Date();
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() + currentPage * DAYS_PER_PAGE);
+      
+      const days = getDaysArray(startDate, DAYS_PER_PAGE);
+      const todayStr = today.toISOString().split('T')[0];
+      
+      timeline.innerHTML = days.map(dateStr => {
+        const date = new Date(dateStr);
+        const weekday = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const isToday = dateStr === todayStr;
+        
+        const dayEvents = events.filter(e => {
+          const start = new Date(e.start_date);
+          const end = e.end_date ? new Date(e.end_date) : start;
+          const check = new Date(dateStr);
+          return check >= start && check <= end;
+        });
+        
+        return `
+          <div class="day-row ${isToday ? 'today' : ''}">
+            <div class="day-date">
+              <div class="date-weekday">星期${weekday}</div>
+              <div class="date-day">${day}</div>
+              <div class="date-month">${month}月</div>
+            </div>
+            <div class="day-events">
+              ${dayEvents.length > 0 ? dayEvents.map(e => `
+                <div class="event-card" style="border-color: ${e.color || e.user_color}">
+                  <div class="event-title">${e.title}</div>
+                  <div class="event-meta">
+                    <img src="${e.avatar_url || ''}" class="event-avatar" alt="">
+                    <span class="event-person">${e.user_name}</span>
+                  </div>
+                </div>
+              `).join('') : '<div class="no-events">✓ 全員可用</div>'}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      updateNav();
+    }
+    
+    function updateNav() {
+      const maxPages = 10;
+      totalPages = maxPages;
+      
+      document.getElementById('page-indicator').textContent = `第 ${currentPage + 1} 頁 / 共 ${totalPages} 頁`;
+      document.getElementById('prev-btn').disabled = currentPage === 0;
+      document.getElementById('next-btn').disabled = currentPage >= totalPages - 1;
+    }
+    
+    function goToPage(page) {
+      currentPage = Math.max(0, Math.min(page, 9));
+      renderTimeline();
+      resetAutoRotate();
+    }
+    
+    function prevPage() { goToPage(currentPage - 1); }
+    function nextPage() { goToPage(currentPage + 1); }
+    
+    // Auto rotation
+    function startAutoRotate() {
+      if (autoRotateInterval) clearInterval(autoRotateInterval);
+      if (progressInterval) clearInterval(progressInterval);
+      
+      let progress = 0;
+      const duration = 15000; // 15 seconds
+      const interval = 100;
+      
+      document.getElementById('progress-fill').style.width = '0%';
+      
+      progressInterval = setInterval(() => {
+        progress += (100 / (duration / interval));
+        document.getElementById('progress-fill').style.width = Math.min(progress, 100) + '%';
+      }, interval);
+      
+      autoRotateInterval = setInterval(() => {
+        if (autoRotateEnabled && currentPage < 9) {
+          nextPage();
+        } else if (currentPage >= 9) {
+          goToPage(0); // Loop back
+        }
+      }, duration);
+    }
+    
+    function resetAutoRotate() {
+      startAutoRotate();
+    }
+    
+    // Toggle auto rotate
+    document.getElementById('auto-rotate').addEventListener('change', (e) => {
+      autoRotateEnabled = e.target.checked;
+      document.getElementById('auto-hint').style.display = autoRotateEnabled ? 'block' : 'none';
+      if (autoRotateEnabled) {
+        resetAutoRotate();
+      } else {
+        clearInterval(autoRotateInterval);
+        clearInterval(progressInterval);
+        document.getElementById('progress-fill').style.width = '0%';
+      }
+    });
+    
+    // Init
+    loadData();
+    startAutoRotate();
+  </script>
+</body>
+</html>

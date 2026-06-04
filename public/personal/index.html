@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔬 實驗室行事曆 - 個人儀表板</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans TC', system-ui, sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
+    
+    .header {
+      background: linear-gradient(135deg, #1a1f35, #2d1f4a);
+      padding: 24px 32px;
+      border-bottom: 1px solid #2a2a3a;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .header h1 { font-size: 24px; color: #fff; }
+    .header-links { margin-left: auto; display: flex; gap: 12px; }
+    .header-link { color: #888; text-decoration: none; padding: 8px 16px; border-radius: 8px; transition: all 0.2s; }
+    .header-link:hover { background: #1a1f35; color: #fff; }
+    
+    .container { display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto; }
+    
+    /* Users List */
+    .users-panel { background: #1a1f35; border-radius: 16px; border: 1px solid #2a2a3a; overflow: hidden; }
+    .panel-header { padding: 16px 20px; border-bottom: 1px solid #2a2a3a; display: flex; align-items: center; gap: 8px; }
+    .panel-header h2 { font-size: 16px; color: #fff; }
+    .panel-header .btn { margin-left: auto; padding: 4px 12px; font-size: 12px; }
+    
+    .user-list { padding: 12px; }
+    .user-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .user-item:hover { background: #2a2a4a; }
+    .user-item.active { background: #2563eb20; border: 1px solid #2563eb; }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .user-info { flex: 1; }
+    .user-name { font-size: 14px; font-weight: 500; }
+    .user-status { font-size: 11px; color: #888; }
+    .user-color { width: 8px; height: 8px; border-radius: 50%; }
+    
+    /* Calendar */
+    .calendar-panel { background: #1a1f35; border-radius: 16px; border: 1px solid #2a2a3a; overflow: hidden; }
+    .calendar-header { padding: 16px 20px; border-bottom: 1px solid #2a2a3a; display: flex; align-items: center; gap: 16px; }
+    .calendar-nav { display: flex; gap: 8px; }
+    .calendar-nav button { background: #2a2a4a; border: none; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+    .calendar-nav button:hover { background: #3a3a5a; }
+    .calendar-title { font-size: 18px; font-weight: 600; color: #fff; flex: 1; text-align: center; }
+    .calendar-today { background: #2563eb; border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    
+    .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); background: #161922; border-bottom: 1px solid #2a2a3a; }
+    .weekday { padding: 12px; text-align: center; font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; }
+    
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .calendar-day {
+      min-height: 100px;
+      padding: 8px;
+      border: 1px solid #2a2a3a;
+      border-top: none;
+      border-left: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .calendar-day:nth-child(7n) { border-right: none; }
+    .calendar-day:hover { background: #2a2a4a; }
+    .calendar-day.other-month { opacity: 0.3; }
+    .calendar-day.today { background: #2563eb20; }
+    
+    .day-number { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .today .day-number { color: #2563eb; }
+    
+    .day-events { display: flex; flex-direction: column; gap: 2px; }
+    .event-chip {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: white;
+    }
+    
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: #1a1f35; border: 1px solid #2a2a3a; border-radius: 16px; width: 480px; max-width: 90vw; }
+    .modal-header { padding: 20px 24px; border-bottom: 1px solid #2a2a3a; display: flex; align-items: center; gap: 12px; }
+    .modal-header h3 { flex: 1; font-size: 18px; color: #fff; }
+    .modal-close { background: none; border: none; color: #888; font-size: 24px; cursor: pointer; }
+    .modal-body { padding: 24px; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 14px; background: #0f1117; border: 1px solid #2a2a4a; border-radius: 8px; color: #fff; font-size: 14px;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2563eb; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    
+    .modal-footer { padding: 16px 24px; border-top: 1px solid #2a2a3a; display: flex; justify-content: flex-end; gap: 12px; }
+    .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: #2a2a4a; color: #fff; }
+    .btn-danger { background: #dc2626; color: white; }
+    
+    /* Stats */
+    .stats-row { display: flex; gap: 16px; margin-bottom: 16px; }
+    .stat-item { background: #0f1117; padding: 12px 16px; border-radius: 8px; flex: 1; text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #fff; }
+    .stat-label { font-size: 11px; color: #888; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔬 實驗室行事曆</h1>
+    <div class="header-links">
+      <a href="/board" class="header-link">📺 白板顯示</a>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="users-panel">
+      <div class="panel-header">
+        <h2>👥 成員</h2>
+        <button class="btn btn-primary" onclick="openUserModal()">+ 新增</button>
+      </div>
+      <div class="user-list" id="user-list">
+        <!-- Users loaded dynamically -->
+      </div>
+    </div>
+    
+    <div class="calendar-panel">
+      <div class="stats-row" style="padding: 16px 20px 0;">
+        <div class="stat-item"><div class="stat-value" id="stat-users">0</div><div class="stat-label">成員</div></div>
+        <div class="stat-item"><div class="stat-value" id="stat-events">0</div><div class="stat-label">本月行程</div></div>
+        <div class="stat-item"><div class="stat-value" id="stat-free">0</div><div class="stat-label">可用時段</div></div>
+      </div>
+      
+      <div class="calendar-header">
+        <div class="calendar-nav">
+          <button onclick="changeMonth(-1)">◀</button>
+          <button onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="calendar-title" id="calendar-title">2024年1月</div>
+        <button class="calendar-today" onclick="goToToday()">今天</button>
+      </div>
+      
+      <div class="calendar-weekdays">
+        <div class="weekday">日</div><div class="weekday">一</div><div class="weekday">二</div>
+        <div class="weekday">三</div><div class="weekday">四</div><div class="weekday">五</div><div class="weekday">六</div>
+      </div>
+      
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+  </div>
+  
+  <!-- User Modal -->
+  <div class="modal-overlay" id="user-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="user-modal-title">新增成員</h3>
+        <button class="modal-close" onclick="closeUserModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="user-id">
+        <div class="form-group">
+          <label>姓名</label>
+          <input type="text" id="user-name" placeholder="輸入姓名">
+        </div>
+        <div class="form-group">
+          <label>頭像 URL</label>
+          <input type="text" id="user-avatar" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>顏色</label>
+          <input type="color" id="user-color" value="#3b82f6" style="height: 44px; padding: 4px;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="delete-user-btn" onclick="deleteUser()" style="margin-right: auto; display: none;">刪除</button>
+        <button class="btn btn-secondary" onclick="closeUserModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveUser()">儲存</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Event Modal -->
+  <div class="modal-overlay" id="event-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="event-modal-title">新增行程</h3>
+        <button class="modal-close" onclick="closeEventModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="event-id">
+        <div class="form-group">
+          <label>行程標題</label>
+          <input type="text" id="event-title" placeholder="會議、報告、實驗...">
+        </div>
+        <div class="form-group">
+          <label>成員</label>
+          <select id="event-user"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>開始日期</label>
+            <input type="date" id="event-start">
+          </div>
+          <div class="form-group">
+            <label>結束日期</label>
+            <input type="date" id="event-end">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>說明</label>
+          <textarea id="event-desc" rows="3" placeholder="行程詳情..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="delete-event-btn" onclick="deleteEvent()" style="margin-right: auto; display: none;">刪除</button>
+        <button class="btn btn-secondary" onclick="closeEventModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveEvent()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let users = [];
+    let events = [];
+    let currentUserId = null;
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth() + 1;
+    
+    async function loadUsers() {
+      users = await fetch('/api/users').then(r => r.json());
+      renderUsers();
+      document.getElementById('stat-users').textContent = users.length;
+    }
+    
+    function renderUsers() {
+      const list = document.getElementById('user-list');
+      list.innerHTML = users.map(u => `
+        <div class="user-item ${currentUserId === u.id ? 'active' : ''}" onclick="selectUser(${u.id})">
+          <img src="${u.avatar_url || 'https://api.dicebear.com/7.x/initials/svg?seed=' + u.name}" class="user-avatar" alt="${u.name}">
+          <div class="user-info">
+            <div class="user-name">${u.name}</div>
+            <div class="user-status">點擊編輯</div>
+          </div>
+          <div class="user-color" style="background: ${u.color}"></div>
+        </div>
+      `).join('');
+      
+      // Update event user dropdown
+      const select = document.getElementById('event-user');
+      select.innerHTML = users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+    }
+    
+    function selectUser(id) {
+      currentUserId = id;
+      renderUsers();
+      const user = users.find(u => u.id === id);
+      openUserModal(user);
+    }
+    
+    function openUserModal(user = null) {
+      document.getElementById('user-modal-title').textContent = user ? '編輯成員' : '新增成員';
+      document.getElementById('user-id').value = user ? user.id : '';
+      document.getElementById('user-name').value = user ? user.name : '';
+      document.getElementById('user-avatar').value = user && user.avatar_url ? user.avatar_url : '';
+      document.getElementById('user-color').value = user ? user.color : '#3b82f6';
+      document.getElementById('delete-user-btn').style.display = user ? 'block' : 'none';
+      document.getElementById('user-modal').classList.add('show');
+    }
+    
+    function closeUserModal() {
+      document.getElementById('user-modal').classList.remove('show');
+    }
+    
+    async function saveUser() {
+      const id = document.getElementById('user-id').value;
+      const data = {
+        name: document.getElementById('user-name').value,
+        avatar_url: document.getElementById('user-avatar').value,
+        color: document.getElementById('user-color').value
+      };
+      
+      if (id) {
+        await fetch(`/api/users/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      } else {
+        await fetch('/api/users', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      }
+      
+      closeUserModal();
+      loadUsers();
+      loadEvents();
+    }
+    
+    async function deleteUser() {
+      const id = document.getElementById('user-id').value;
+      if (confirm('確定要刪除這位成員嗎？所有行程也會一併刪除。')) {
+        await fetch(`/api/users/${id}`, { method: 'DELETE' });
+        closeUserModal();
+        currentUserId = null;
+        loadUsers();
+        loadEvents();
+      }
+    }
+    
+    async function loadEvents() {
+      events = await fetch(`/api/calendar/${currentYear}/${currentMonth}`).then(r => r.json());
+      document.getElementById('stat-events').textContent = events.length;
+      renderCalendar();
+    }
+    
+    function renderCalendar() {
+      document.getElementById('calendar-title').textContent = `${currentYear}年${currentMonth}月`;
+      
+      const grid = document.getElementById('calendar-grid');
+      const firstDay = new Date(currentYear, currentMonth - 1, 1);
+      const lastDay = new Date(currentYear, currentMonth, 0);
+      const startDay = firstDay.getDay();
+      const daysInMonth = lastDay.getDate();
+      const today = new Date();
+      
+      let html = '';
+      
+      // Previous month days
+      const prevMonth = new Date(currentYear, currentMonth - 1, 0);
+      for (let i = startDay - 1; i >= 0; i--) {
+        html += `<div class="calendar-day other-month"><div class="day-number">${prevMonth.getDate() - i}</div></div>`;
+      }
+      
+      // Current month days
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dayEvents = events.filter(e => e.start_date === dateStr);
+        const isToday = today.getFullYear() === currentYear && today.getMonth() + 1 === currentMonth && today.getDate() === d;
+        
+        html += `
+          <div class="calendar-day ${isToday ? 'today' : ''}" onclick="openEventModal('${dateStr}')">
+            <div class="day-number">${d}</div>
+            <div class="day-events">
+              ${dayEvents.slice(0, 3).map(e => `
+                <div class="event-chip" style="background: ${e.color || e.user_color}">${e.title}</div>
+              `).join('')}
+              ${dayEvents.length > 3 ? `<div class="event-chip" style="background: #444">+${dayEvents.length - 3}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      
+      // Next month days
+      const totalCells = Math.ceil((startDay + daysInMonth) / 7) * 7;
+      for (let i = 1; i <= totalCells - startDay - daysInMonth; i++) {
+        html += `<div class="calendar-day other-month"><div class="day-number">${i}</div></div>`;
+      }
+      
+      grid.innerHTML = html;
+    }
+    
+    function changeMonth(delta) {
+      currentMonth += delta;
+      if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+      if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+      loadEvents();
+    }
+    
+    function goToToday() {
+      const today = new Date();
+      currentYear = today.getFullYear();
+      currentMonth = today.getMonth() + 1;
+      loadEvents();
+    }
+    
+    function openEventModal(dateStr) {
+      document.getElementById('event-modal-title').textContent = '新增行程';
+      document.getElementById('event-id').value = '';
+      document.getElementById('event-title').value = '';
+      document.getElementById('event-start').value = dateStr;
+      document.getElementById('event-end').value = dateStr;
+      document.getElementById('event-desc').value = '';
+      document.getElementById('event-user').value = currentUserId || (users[0] && users[0].id) || '';
+      document.getElementById('delete-event-btn').style.display = 'none';
+      document.getElementById('event-modal').classList.add('show');
+    }
+    
+    function closeEventModal() {
+      document.getElementById('event-modal').classList.remove('show');
+    }
+    
+    async function saveEvent() {
+      const id = document.getElementById('event-id').value;
+      const data = {
+        user_id: parseInt(document.getElementById('event-user').value),
+        title: document.getElementById('event-title').value,
+        description: document.getElementById('event-desc').value,
+        start_date: document.getElementById('event-start').value,
+        end_date: document.getElementById('event-end').value,
+        type: 'busy'
+      };
+      
+      if (id) {
+        await fetch(`/api/events/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      } else {
+        await fetch('/api/events', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+      }
+      
+      closeEventModal();
+      loadEvents();
+    }
+    
+    async function deleteEvent() {
+      const id = document.getElementById('event-id').value;
+      if (confirm('確定要刪除這個行程嗎？')) {
+        await fetch(`/api/events/${id}`, { method: 'DELETE' });
+        closeEventModal();
+        loadEvents();
+      }
+    }
+    
+    // Init
+    loadUsers();
+    loadEvents();
+  </script>
+</body>
+</html>
